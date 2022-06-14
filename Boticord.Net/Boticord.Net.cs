@@ -50,8 +50,15 @@ public class BoticordClient
         if(response.IsSuccessStatusCode)
             return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync())!;
 
-        var error = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync())!;
-        throw new HttpRequestException(error.Error.Message, null, (HttpStatusCode)error.Error.Code);
+        try
+        {
+            var error = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync())!;
+            throw new HttpRequestException(error.Error.Message, null, (HttpStatusCode)error.Error.Code);
+        }
+        catch
+        {
+            throw new HttpRequestException(await response.Content.ReadAsStringAsync(), null, response.StatusCode);
+        }
     }
 
     internal async Task<T> PostRequest<T>(string path, StringContent data, TimeSpan? timeout = null) =>
