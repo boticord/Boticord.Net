@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
+
 using Newtonsoft.Json;
 
 namespace Boticord.Net.Entities;
@@ -21,8 +22,14 @@ public class Comment
     public bool IsUpdated { get; init; }
 
     [JsonProperty("createdAt")]
-    public long? CreatedAt { get; init; }
+    protected long? _createdAt { get; init; }
+
+    [JsonIgnore]
+    public DateTimeOffset? CreatedAt => _createdAt is not null ? DateTimeOffset.FromUnixTimeMilliseconds((long)_createdAt) : null;
 
     [JsonProperty("updatedAt")]
-    public long? UpdatedAt { get; init; }
+    protected long? _updatedAt { get; init; }
+
+    [JsonIgnore]
+    public DateTimeOffset? UpdatedAt => _updatedAt is not null ? DateTimeOffset.FromUnixTimeMilliseconds((long)_updatedAt) : null;
 }
