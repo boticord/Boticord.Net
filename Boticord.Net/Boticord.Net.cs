@@ -7,7 +7,7 @@ using Boticord.Net.Types;
 
 namespace Boticord.Net;
 
-public class BoticordNet
+public class BoticordClient
 {
     internal static HttpClient HttpClient = new HttpClient
     {
@@ -22,7 +22,7 @@ public class BoticordNet
     internal readonly TimeSpan BotsRateLimit = TimeSpan.FromSeconds(30);
     private DateTime _lastRequest;
 
-    public BoticordNet(BoticordConfig config)
+    public BoticordClient(BoticordConfig config)
     {
         // Wrapper = config.Wrapper;
         HttpClient = config.HttpClient ?? HttpClient;
