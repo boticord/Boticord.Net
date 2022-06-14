@@ -11,7 +11,7 @@ public class ErrorResponse
 public class Error
 {
     [JsonProperty("code")]
-    public string Code { get; init; }
+    public int Code { get; init; }
 
     [JsonProperty("message")]
     public string Message { get; init; }
