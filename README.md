@@ -11,7 +11,7 @@
 
 
 ## Example usage
-This example uses Discord.Net to run discord bot
+This example uses [Discord.Net](https://github.com/discord-net/Discord.Net) to run discord bot
 ```cs
 using Discord.WebSocket;
 using Discord;
