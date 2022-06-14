@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
-using BoticordNet.Types;
-using BoticordNet.Types.Interfaces;
-using BoticordNet.Types.Monitoring;
+using Boticord.Net.Types;
+using Boticord.Net.Types.Interfaces;
+using Boticord.Net.Types.Monitoring;
 using BaseRate = System.Collections.Generic.Dictionary<ulong, Boticord.Net.Types.Enums.Rate>;
 
 namespace Boticord.Net.Services
 {
     public class BaseMonitoringService : BaseService
     {
-        protected BaseMonitoringService(BoticordNetClient client) : base(client) { }
+        protected BaseMonitoringService(Boticord.NetClient client) : base(client) { }
 
         public virtual async ValueTask<BaseGuild> GetGuild(ulong guildId)
         {

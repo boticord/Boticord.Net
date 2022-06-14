@@ -22,7 +22,7 @@ public class BoticordNet
     internal readonly TimeSpan BotsRateLimit = TimeSpan.FromSeconds(30);
     private DateTime _lastRequest;
 
-    public BoticordNet(SdcConfig config)
+    public BoticordNet(BoticordConfig config)
     {
         // Wrapper = config.Wrapper;
         HttpClient = config.HttpClient ?? HttpClient;

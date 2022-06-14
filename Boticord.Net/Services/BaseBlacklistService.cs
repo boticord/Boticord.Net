@@ -7,7 +7,7 @@ namespace Boticord.Net.Services
 {
     public class BaseBlacklistService : BaseService
     {
-        public BaseBlacklistService(BoticordNetClient client) : base(client) { }
+        public BaseBlacklistService(Boticord.NetClient client) : base(client) { }
 
         public async ValueTask<BaseUserWarns> GetWarns(ulong userId)
         {

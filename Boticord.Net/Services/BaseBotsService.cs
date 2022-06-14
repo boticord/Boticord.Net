@@ -12,7 +12,7 @@ namespace Boticord.Net.Services
 {
     public class BaseBotsService : BaseService
     {
-        public BaseBotsService(SdcSharpClient client) : base(client) { }
+        public BaseBotsService(Boticord.NetClient client) : base(client) { }
 
         public void AutoPostStats(TimeSpan interval, ulong botId, uint shards = 1, uint servers = 1)
         {
