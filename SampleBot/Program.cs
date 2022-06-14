@@ -1,7 +1,6 @@
 ﻿using Discord.WebSocket;
 using Discord;
 using Boticord.Net;
-using Boticord.Net.Services;
 using Boticord.Net.Types;
 
 var botClient = new DiscordSocketClient();
