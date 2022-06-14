@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Entities\ServerInfo\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
