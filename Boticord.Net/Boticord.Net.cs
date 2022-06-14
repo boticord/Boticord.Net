@@ -9,7 +9,7 @@ namespace Boticord.Net;
 
 public class BoticordClient
 {
-    internal static HttpClient HttpClient = new HttpClient
+    internal HttpClient HttpClient = new()
     {
         BaseAddress = new Uri("https://api.boticord.top/v1"),
         DefaultRequestHeaders =
