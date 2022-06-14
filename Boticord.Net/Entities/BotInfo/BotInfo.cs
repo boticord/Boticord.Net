@@ -5,7 +5,10 @@ namespace Boticord.Net.Entities;
 public class BotInfo
 {
     [JsonProperty("id")]
-    public string Id { get; init; }
+    protected string _id { get; init; }
+
+    [JsonIgnore] 
+    public ulong Id => ulong.Parse(_id);
 
     [JsonProperty("shortCode")]
     public string? ShortCode { get; init; }
