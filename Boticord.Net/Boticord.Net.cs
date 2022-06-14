@@ -1,9 +1,11 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Boticord.Net.Types;
+using Boticord.Net.Entities;
 
 namespace Boticord.Net;
 
@@ -11,7 +13,7 @@ public class BoticordClient
 {
     internal HttpClient HttpClient = new()
     {
-        BaseAddress = new Uri("https://api.boticord.top/v1"),
+        BaseAddress = new Uri("https://api.boticord.top/v1/"),
         DefaultRequestHeaders =
             {
                 Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
@@ -45,7 +47,11 @@ public class BoticordClient
         var response = await task;
         response.EnsureSuccessStatusCode();
 
-        return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync())!;
+        if(response.IsSuccessStatusCode)
+            return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync())!;
+
+        var error = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync())!;
+        throw new HttpRequestException(error.Error.Message, null, (HttpStatusCode)error.Error.Code);
     }
 
     internal async Task<T> PostRequest<T>(string path, StringContent data, TimeSpan? timeout = null) =>
@@ -53,5 +59,26 @@ public class BoticordClient
 
     internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) =>
         await Request<T>(HttpClient.GetAsync(path), timeout);
+
+
+    public Task<BotInfo> GetBotInfoAsync(ulong botId)
+    {
+        return GetRequest<BotInfo>($"bot/{botId}");
+    }
+
+    public Task<BotInfo> GetBotInfoAsync(string shortId)
+    {
+        return GetRequest<BotInfo>($"bot/{shortId}");
+    }
+
+    public Task<IEnumerable<Comment>> GetBotCommentsAsync(ulong botId)
+    {
+        return GetRequest<IEnumerable<Comment>>($"bot/{botId}/comments");
+    }
+
+    public Task<IEnumerable<Comment>> GetBotCommentsAsync(string shortId)
+    {
+        return GetRequest<IEnumerable<Comment>>($"bot/{shortId}/comments");
+    }
 }
 
