@@ -9,7 +9,6 @@
 ## Example usage
 This example uses [Discord.Net](https://github.com/discord-net/Discord.Net) to run discord bot
 ```cs
-using System.Runtime.InteropServices.ComTypes;
 using Discord.WebSocket;
 using Discord;
 using Boticord.Net;
