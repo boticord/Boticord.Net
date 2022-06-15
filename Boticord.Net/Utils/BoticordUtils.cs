@@ -13,6 +13,10 @@ internal static class BoticordUtils
         { Endpoints.GetServerInfo, new [] { TokenType.Bot , TokenType.PrivateBot, TokenType.Profile, TokenType.None} },
         { Endpoints.GetServerComments, new [] { TokenType.Bot , TokenType.PrivateBot, TokenType.Profile} },
         { Endpoints.PostServerStats, new [] { TokenType.Bot, TokenType.PrivateBot } },
+        
+        { Endpoints.PostLinksGet, new [] { TokenType.Profile } },
+        { Endpoints.PostLinksCreate, new [] { TokenType.Profile } },
+        { Endpoints.PostLinksDelete, new [] { TokenType.Profile } },
     };
 
     internal static bool CanSendRequestToEndpoint(BoticordClient client, Endpoints endpoint)

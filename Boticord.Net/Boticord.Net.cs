@@ -162,5 +162,29 @@ public class BoticordClient
             }), Encoding.UTF8, "application/json");
         return PostRequest<OkResponse>("stats", content);
     }
+
+    public Task<IEnumerable<ShortLink>> GetUsersShortLinks(string? code = null)
+    {
+        ThrowIfNoAccess(Endpoints.PostLinksGet);
+
+        return PostRequest<IEnumerable<ShortLink>>("links/get",
+            new StringContent(JsonConvert.SerializeObject(new { code })));
+    }
+
+    public Task<OkResponse> CreateShortLinks(string code, string link, ShortDomain domain = ShortDomain.BcordCC)
+    {
+        ThrowIfNoAccess(Endpoints.PostLinksCreate);
+
+        return PostRequest<OkResponse>("links/create",
+            new StringContent(JsonConvert.SerializeObject(new { code, link, domain = (int)domain })));
+    }
+
+    public Task<OkResponse> DeleteShortLinks(string code, ShortDomain domain = ShortDomain.BcordCC)
+    {
+        ThrowIfNoAccess(Endpoints.PostLinksDelete);
+
+        return PostRequest<OkResponse>("links/delete",
+            new StringContent(JsonConvert.SerializeObject(new { code, domain = (int)domain })));
+    }
 }
 

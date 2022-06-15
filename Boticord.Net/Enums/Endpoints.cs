@@ -8,5 +8,9 @@ public enum Endpoints
     
     GetServerInfo,
     GetServerComments,
-    PostServerStats
+    PostServerStats,
+
+    PostLinksGet,
+    PostLinksCreate,
+    PostLinksDelete,
 }
