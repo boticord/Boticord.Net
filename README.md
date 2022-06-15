@@ -22,8 +22,8 @@ dotnet add package Boticord.Net --version 1.0.1
 
 ## Useful Links
 
-* [GitHub]((https://github.com/boticord))
-* [Documentation](https://alxelzot.gitbook.io/boticord.net/))
+* [GitHub](https://github.com/boticord)
+* [Documentation](https://alxelzot.gitbook.io/boticord.net/)
 * [BotiCord](https://boticord.top/)
 
 ## Example usage
