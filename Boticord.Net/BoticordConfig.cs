@@ -3,26 +3,30 @@ using System.Net.Http;
 
 using Boticord.Net.Enums;
 
-namespace Boticord.Net
+namespace Boticord.Net;
+
+public class BoticordConfig
 {
-    public class BoticordConfig
+    private string _token = "";
+
+    public BoticordConfig(HttpClient? httpClient = null)
     {
-        private string _token = "";
+        HttpClient = httpClient;
+    }
 
-        public HttpClient? HttpClient { get; set; } = null;
+    public HttpClient? HttpClient { get; set; } = null;
 
-        public TokenType TokenType { get; set; } = TokenType.Bot;
+    public TokenType TokenType { get; set; } = TokenType.Bot;
 
-        public string Token
+    public string Token
+    {
+        get => _token;
+        set
         {
-            get => _token;
-            set
-            {
-                if (TokenType != TokenType.None && string.IsNullOrWhiteSpace(value))
-                    throw new NullReferenceException("Token can not be null or empty");
+            if (TokenType != TokenType.None && string.IsNullOrWhiteSpace(value))
+                throw new NullReferenceException("Token can not be null or empty");
 
-                _token = $"{TokenType} {value}";
-            }
+            _token = $"{TokenType} {value}";
         }
     }
 }
