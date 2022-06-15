@@ -89,7 +89,7 @@ public class BoticordClient
         return GetRequest<IEnumerable<Comment>>($"bot/{shortId}/comments");
     }
 
-    public Task<OkResponse> SendBotStatsAsync(int servers, int shards = 1, int users = 0)
+    public Task<OkResponse> SendBotStatsAsync(uint servers, uint shards = 1, uint users = 0)
     {
         var content =
             new StringContent(JsonConvert.SerializeObject(new {  servers, shards, users }), Encoding.UTF8, "application/json");
