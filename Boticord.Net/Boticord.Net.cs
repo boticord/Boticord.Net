@@ -14,7 +14,7 @@ public class BoticordClient
 {
     internal HttpClient HttpClient = new()
     {
-        BaseAddress = new Uri("https://api.boticord.top/v1/"),
+        BaseAddress = new Uri("https://api.boticord.top/v2/"),
         DefaultRequestHeaders =
             {
                 Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
@@ -25,9 +25,12 @@ public class BoticordClient
     internal readonly TimeSpan BotsRateLimit = TimeSpan.FromSeconds(30);
     private DateTime _lastRequest;
 
+    public BoticordConfig Config;
+
     public BoticordClient(BoticordConfig config)
     {
-        // Wrapper = config.Wrapper;
+        Config = config;
+        
         HttpClient = config.HttpClient ?? HttpClient;
 
         HttpClient.DefaultRequestHeaders.Add("Authorization", config.Token);
@@ -87,6 +90,13 @@ public class BoticordClient
     public Task<IEnumerable<Comment>> GetBotCommentsAsync(string shortId)
     {
         return GetRequest<IEnumerable<Comment>>($"bot/{shortId}/comments");
+    }
+
+    public Task<OkResponse> SendBotStatsAsync(int servers, int shards = 1, int users = 0)
+    {
+        var content =
+            new StringContent(JsonConvert.SerializeObject(new {  servers, shards, users }));
+        return PostRequest<OkResponse>("stats", content);
     }
 }
 

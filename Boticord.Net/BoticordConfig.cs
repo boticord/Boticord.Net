@@ -1,26 +1,27 @@
 using System;
 using System.Net.Http;
 
+using Boticord.Net.Enums;
+
 namespace Boticord.Net
 {
     public class BoticordConfig
     {
-        private const string TokenStartsWith = "SDC ";
         private string _token = "";
 
         public HttpClient? HttpClient { get; set; } = null;
+
+        public TokenType TokenType { get; set; } = TokenType.Bot;
 
         public string Token
         {
             get => _token;
             set
             {
-                value = value.StartsWith(TokenStartsWith) ? value : TokenStartsWith + value;
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new NullReferenceException("Token can not be null or empty");
 
-                if (value.Length <= TokenStartsWith.Length + 1)
-                    throw new NullReferenceException("Token can not be empty");
-
-                _token = value;
+                _token = $"{TokenType} {value}";
             }
         }
     }
