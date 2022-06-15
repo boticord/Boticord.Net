@@ -32,7 +32,7 @@ public class BoticordClient
     }
 
     internal readonly TimeSpan BotsStatsRateLimit = TimeSpan.FromSeconds(2);
-    
+
     private TimeLimiter _mainLimiter = TimeLimiter.GetFromMaxCountByInterval(5, TimeSpan.FromSeconds(6));
     private TimeLimiter _secondaryLimiter = TimeLimiter.GetFromMaxCountByInterval(1, TimeSpan.FromSeconds(3));
 
@@ -54,7 +54,6 @@ public class BoticordClient
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(Config.Token);
 
         var response = await HttpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
 
         if (response.IsSuccessStatusCode)
             return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync())!;
@@ -66,12 +65,11 @@ public class BoticordClient
         }
         catch
         {
-            if (response.StatusCode == HttpStatusCode.TooManyRequests)
-            {
-                _rateLimitTriggered = true;
-                return await Request<T>(request);
-            }
-            throw new HttpRequestException(await response.Content.ReadAsStringAsync(), null, response.StatusCode);
+            if (response.StatusCode != HttpStatusCode.TooManyRequests)
+                throw new HttpRequestException(await response.Content.ReadAsStringAsync(), null, response.StatusCode);
+
+            _rateLimitTriggered = true;
+            return await Request<T>(request);
         }
     }
 
@@ -173,28 +171,50 @@ public class BoticordClient
         return PostRequest<OkResponse>("stats", content);
     }
 
-    public Task<IEnumerable<ShortLink>> GetUsersShortLinks(string? code = null)
+    public Task<IEnumerable<ShortLink>> GetUsersShortLinksAsync(string? code = null)
     {
         ThrowIfNoAccess(Endpoints.PostLinksGet);
+        var content = code is not null 
+            ? new StringContent(JsonConvert.SerializeObject(new { code }), Encoding.UTF8, "application/json") 
+            : new StringContent("{}", Encoding.UTF8, "application/json");
 
-        return PostRequest<IEnumerable<ShortLink>>("links/get",
-            new StringContent(JsonConvert.SerializeObject(new { code })));
+        return PostRequest<IEnumerable<ShortLink>>("links/get", content);
     }
 
-    public Task<OkResponse> CreateShortLinks(string code, string link, ShortDomain domain = ShortDomain.BcordCC)
+    public Task<OkResponse> CreateShortLinksAsync(string code, string link, ShortDomain domain = ShortDomain.BcordCC)
     {
         ThrowIfNoAccess(Endpoints.PostLinksCreate);
-
         return PostRequest<OkResponse>("links/create",
-            new StringContent(JsonConvert.SerializeObject(new { code, link, domain = (int)domain })));
+            new StringContent(JsonConvert.SerializeObject(new { code, link, domain = (int)domain }), Encoding.UTF8, "application/json"));
     }
 
-    public Task<OkResponse> DeleteShortLinks(string code, ShortDomain domain = ShortDomain.BcordCC)
+    public Task<OkResponse> DeleteShortLinksAsync(string code, ShortDomain domain = ShortDomain.BcordCC)
     {
         ThrowIfNoAccess(Endpoints.PostLinksDelete);
 
         return PostRequest<OkResponse>("links/delete",
-            new StringContent(JsonConvert.SerializeObject(new { code, domain = (int)domain })));
+            new StringContent(JsonConvert.SerializeObject(new { code, domain = (int)domain }), Encoding.UTF8, "application/json"));
+    }
+
+    public Task<UserInfo> GetUserInfoAsync(ulong userId)
+    {
+        ThrowIfNoAccess(Endpoints.GetUserInfo);
+
+        return GetRequest<UserInfo>($"profile/{userId}");
+    }
+
+    public Task<UserComments> GetUserCommentsAsync(ulong userId)
+    {
+        ThrowIfNoAccess(Endpoints.GetUserInfo);
+
+        return GetRequest<UserComments>($"profile/{userId}/comments");
+    }
+
+    public Task<IEnumerable<UsersBot>> GetUsersBotsAsync(ulong userId)
+    {
+        ThrowIfNoAccess(Endpoints.GetUserInfo);
+
+        return GetRequest<IEnumerable<UsersBot>>($"bots/{userId}");
     }
 }
 

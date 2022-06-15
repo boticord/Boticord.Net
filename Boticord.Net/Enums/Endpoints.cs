@@ -13,4 +13,8 @@ public enum Endpoints
     PostLinksGet,
     PostLinksCreate,
     PostLinksDelete,
+
+    GetUserInfo,
+    GetUserComments,
+    GetUserBots
 }

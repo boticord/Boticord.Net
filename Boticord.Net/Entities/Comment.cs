@@ -7,10 +7,10 @@ namespace Boticord.Net.Entities;
 public class Comment
 {
     [JsonProperty("userID")]
-    protected string _userId { get; init; }
+    protected string? _userId { get; init; }
 
     [JsonIgnore]
-    public ulong UserId => ulong.Parse(_userId);
+    public ulong? UserId => _userId is not null ? ulong.Parse(_userId) : null;
 
     [JsonProperty("text")]
     public string Text { get; init; }
