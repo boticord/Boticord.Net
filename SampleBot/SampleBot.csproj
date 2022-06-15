@@ -8,11 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Boticord.Net" Version="1.0.1" />
     <PackageReference Include="Discord.Net" Version="3.7.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Boticord.Net\Boticord.Net.csproj" />
   </ItemGroup>
 
 </Project>
