@@ -22,12 +22,10 @@ Docs https://alxelzot.gitbook.io/boticord.net/</Description>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RateLimiter" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Entities\ServerInfo\" />
-    <Folder Include="Services\" />
     <Folder Include="Enums\" />
     <Folder Include="Utils\" />
   </ItemGroup>
