@@ -156,19 +156,29 @@ public class BoticordClient
     {
         ThrowIfNoAccess(Endpoints.PostServerStats);
 
-        var content =
-            new StringContent(JsonConvert.SerializeObject(new
-            {
-                serverId,
-                up = up ? 1 : 0,
-                status = status ? 1 : 0,
-                serverName,
-                serverAvatar,
-                serverMembersAllCount,
-                serverMembersOnlineCount,
-                serverOwnerID
-            }), Encoding.UTF8, "application/json");
-        return PostRequest<OkResponse>("stats", content);
+        var cont = new Dictionary<string, object>
+        {
+            { "serverID", serverId.ToString() },
+            { "up", up ? 1 : 0 },
+            { "status", status ? 1 : 0 },
+        };
+        if (serverName is not null)
+            cont["serverName"] = serverName;
+
+        if(serverAvatar is not null)
+            cont["serverAvatar"] = serverAvatar;
+
+        if (serverMembersAllCount is not null)
+            cont["serverMembersAllCount"] = serverMembersAllCount;
+
+        if (serverMembersOnlineCount is not null)
+            cont["serverMembersOnlineCount"] = serverMembersOnlineCount;
+
+        if (serverOwnerID is not null)
+            cont["serverOwnerID"] = serverOwnerID.ToString()!;
+
+        var content = new StringContent(JsonConvert.SerializeObject(cont), Encoding.UTF8, "application/json");
+        return PostRequest<OkResponse>("server", content);
     }
 
     public Task<IEnumerable<ShortLink>> GetUsersShortLinksAsync(string? code = null)

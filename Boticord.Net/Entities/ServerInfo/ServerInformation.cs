@@ -20,10 +20,10 @@ public class ServerInformation
     public int MembersOnline => _members[1];
 
     [JsonProperty("owner")]
-    protected string _owner { get; init; }
+    protected string? _owner { get; init; }
 
     [JsonIgnore]
-    public ulong Owner => ulong.Parse(_owner);
+    public ulong? Owner => _owner is not null ? ulong.Parse(_owner) : null;
 
     [JsonProperty("bumps")]
     public int Bumps { get; init; }
