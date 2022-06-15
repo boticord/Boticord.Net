@@ -1,9 +1,6 @@
-using System;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -11,9 +8,7 @@ using Boticord.Net.Entities;
 using Boticord.Net.Utils;
 using Boticord.Net.Enums;
 
-using RateLimiter;
-using ComposableAsync;
-
+using Boticord.Net.Services;
 namespace Boticord.Net;
 
 public class BoticordClient
@@ -33,23 +28,25 @@ public class BoticordClient
 
     internal readonly TimeSpan BotsStatsRateLimit = TimeSpan.FromSeconds(2);
 
-    private TimeLimiter _mainLimiter = TimeLimiter.GetFromMaxCountByInterval(5, TimeSpan.FromSeconds(6));
-    private TimeLimiter _secondaryLimiter = TimeLimiter.GetFromMaxCountByInterval(1, TimeSpan.FromSeconds(3));
+    private BucketRateLimiter _mainLimiter = new (5, TimeSpan.FromSeconds(6));
+    private BucketRateLimiter _secondaryLimiter = new (1, TimeSpan.FromSeconds(3));
 
-    private bool _rateLimitTriggered = false;
+    private bool _rateLimitTriggered;
 
-    private async Task RateLimiter(bool postStats = false)
+    private async Task RateLimit(bool postStats = false)
     {
         if (_rateLimitTriggered)
             await Task.Delay(6000);
-        await _mainLimiter;
+
+        await _mainLimiter.WaitAsync();
+
         if (postStats)
-            await _secondaryLimiter;
+            await _secondaryLimiter.WaitAsync();
     }
 
     private async Task<T> Request<T>(HttpRequestMessage request)
     {
-        await RateLimiter(request.RequestUri!.ToString().EndsWith("stats") || request.RequestUri!.ToString().EndsWith("server"));
+        await RateLimit(request.RequestUri!.ToString().EndsWith("stats") || request.RequestUri!.ToString().EndsWith("server"));
 
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(Config.Token);
 
@@ -152,7 +149,7 @@ public class BoticordClient
         string? serverAvatar = null,
         uint? serverMembersAllCount = null,
         uint? serverMembersOnlineCount = null,
-        ulong? serverOwnerID = null)
+        ulong? serverOwnerId = null)
     {
         ThrowIfNoAccess(Endpoints.PostServerStats);
 
@@ -174,8 +171,8 @@ public class BoticordClient
         if (serverMembersOnlineCount is not null)
             cont["serverMembersOnlineCount"] = serverMembersOnlineCount;
 
-        if (serverOwnerID is not null)
-            cont["serverOwnerID"] = serverOwnerID.ToString()!;
+        if (serverOwnerId is not null)
+            cont["serverOwnerID"] = serverOwnerId.ToString()!;
 
         var content = new StringContent(JsonConvert.SerializeObject(cont), Encoding.UTF8, "application/json");
         return PostRequest<OkResponse>("server", content);
