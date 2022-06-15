@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,43 +19,25 @@ public class BaseBotsService
         _client = client;
     }
 
-    public void AutoPostStats(TimeSpan interval, ulong botId, uint shards = 1, uint servers = 1)
+    private PeriodicTimer timer;
+
+    public void AutoPostStats(TimeSpan interval, uint servers, uint shards = 1, uint users = 0, CancellationToken? cancellationToken = null)
     {
+        timer = new(interval);
+
         if (interval < _client.BotsRateLimit)
             throw new ArgumentOutOfRangeException(
                 nameof(interval),
                 interval,
-                nameof(interval) + " value can not be less than" + _client.BotsRateLimit);
+                nameof(interval) + " value can not be less than " + _client.BotsRateLimit);
 
         _ = Task.Run(async () =>
         {
-            while (true)
+            while (cancellationToken is null || !cancellationToken.Value.IsCancellationRequested)
             {
-                await PostStats<UpdateServerStatsResponse>(botId, shards, servers);
-                await Task.Delay(interval);
+                await _client.SendBotStatsAsync(servers, shards, users);
+                await timer.WaitForNextTickAsync(cancellationToken ?? default);
             }
         });
-    }
-
-    public async Task<T> PostStats<T>(ulong botId, uint shards = 1, uint servers = 1)
-        where T : UpdateServerStatsResponse
-    {
-        shards = shards < 1 ? 1 : shards;
-        servers = servers < 1 ? 1 : servers;
-        return await _client.PostRequest<T>(
-            "bots" + botId + "/stats",
-            new StringContent(
-                JsonConvert.SerializeObject(
-                    new Dictionary<string, uint>
-                    {
-                            { "shardsCount", shards },
-                            { "serversCount", servers }
-                    }
-                ),
-                Encoding.ASCII,
-                "application/json"
-            ),
-            _client.BotsRateLimit
-        );
     }
 }
