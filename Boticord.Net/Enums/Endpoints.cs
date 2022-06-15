@@ -2,7 +2,11 @@
 
 public enum Endpoints
 {
-    GetBotInfo = 0,
-    GetBotComments = 1,
-    PostBotStats = 2
+    GetBotInfo,
+    GetBotComments,
+    PostBotStats,
+    
+    GetServerInfo,
+    GetServerComments,
+    PostServerStats
 }

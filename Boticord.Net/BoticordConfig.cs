@@ -18,7 +18,7 @@ namespace Boticord.Net
             get => _token;
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (TokenType != TokenType.None && string.IsNullOrWhiteSpace(value))
                     throw new NullReferenceException("Token can not be null or empty");
 
                 _token = $"{TokenType} {value}";

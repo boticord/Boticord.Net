@@ -97,19 +97,57 @@ public class BoticordClient
         return GetRequest<IEnumerable<Comment>>($"bot/{botId}/comments");
     }
 
-    public Task<IEnumerable<Comment>> GetBotCommentsAsync(string shortId)
-    {
-        ThrowIfNoAccess(Endpoints.GetBotComments);
-        
-        return GetRequest<IEnumerable<Comment>>($"bot/{shortId}/comments");
-    }
-
     public Task<OkResponse> SendBotStatsAsync(uint servers, uint shards = 1, uint users = 0)
     {
         ThrowIfNoAccess(Endpoints.PostBotStats);
 
         var content =
             new StringContent(JsonConvert.SerializeObject(new { servers, shards, users }), Encoding.UTF8, "application/json");
+        return PostRequest<OkResponse>("stats", content);
+    }
+
+    public Task<ServerInfo> GetServerInfoAsync(ulong serverId)
+    {
+        ThrowIfNoAccess(Endpoints.GetServerInfo);
+
+        return GetRequest<ServerInfo>($"server/{serverId}");
+    }
+
+    public Task<ServerInfo> GetServerInfoAsync(string shortId)
+    {
+        ThrowIfNoAccess(Endpoints.GetServerInfo);
+
+        return GetRequest<ServerInfo>($"server/{shortId}");
+    }
+
+    public Task<IEnumerable<Comment>> GetServerCommentsAsync(ulong serverId)
+    {
+        ThrowIfNoAccess(Endpoints.GetServerComments);
+
+        return GetRequest<IEnumerable<Comment>>($"server/{serverId}/comments");
+    }
+
+    public Task<OkResponse> SendServerStatsAsync(ulong serverId, bool up, bool status, 
+        string? serverName = null, 
+        string? serverAvatar = null, 
+        uint? serverMembersAllCount = null, 
+        uint? serverMembersOnlineCount = null,
+        ulong? serverOwnerID = null)
+    {
+        ThrowIfNoAccess(Endpoints.PostServerStats);
+        
+        var content =
+            new StringContent(JsonConvert.SerializeObject(new
+            {
+                serverId, 
+                up = up ? 1 : 0, 
+                status = status ? 1 : 0,
+                serverName,
+                serverAvatar,
+                serverMembersAllCount,
+                serverMembersOnlineCount,
+                serverOwnerID
+            }), Encoding.UTF8, "application/json");
         return PostRequest<OkResponse>("stats", content);
     }
 }

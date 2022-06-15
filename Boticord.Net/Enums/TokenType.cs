@@ -2,6 +2,7 @@
 
 public enum TokenType
 {
+    None,
     Bot,
     PrivateBot,
     Profile
