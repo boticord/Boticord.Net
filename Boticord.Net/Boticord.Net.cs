@@ -1,17 +1,20 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+
 using Newtonsoft.Json;
-using Boticord.Net.Types;
+
+using Boticord.Net.Entities;
 
 namespace Boticord.Net;
 
 public class BoticordClient
 {
-    internal static HttpClient HttpClient = new HttpClient
+    internal HttpClient HttpClient = new()
     {
-        BaseAddress = new Uri("https://api.boticord.top/v1"),
+        BaseAddress = new Uri("https://api.boticord.top/v2/"),
         DefaultRequestHeaders =
             {
                 Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
@@ -22,9 +25,12 @@ public class BoticordClient
     internal readonly TimeSpan BotsRateLimit = TimeSpan.FromSeconds(30);
     private DateTime _lastRequest;
 
+    public BoticordConfig Config;
+
     public BoticordClient(BoticordConfig config)
     {
-        // Wrapper = config.Wrapper;
+        Config = config;
+        
         HttpClient = config.HttpClient ?? HttpClient;
 
         HttpClient.DefaultRequestHeaders.Add("Authorization", config.Token);
@@ -45,7 +51,18 @@ public class BoticordClient
         var response = await task;
         response.EnsureSuccessStatusCode();
 
-        return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync())!;
+        if(response.IsSuccessStatusCode)
+            return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync())!;
+
+        try
+        {
+            var error = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync())!;
+            throw new HttpRequestException(error.Error.Message, null, (HttpStatusCode)error.Error.Code);
+        }
+        catch
+        {
+            throw new HttpRequestException(await response.Content.ReadAsStringAsync(), null, response.StatusCode);
+        }
     }
 
     internal async Task<T> PostRequest<T>(string path, StringContent data, TimeSpan? timeout = null) =>
@@ -53,5 +70,33 @@ public class BoticordClient
 
     internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) =>
         await Request<T>(HttpClient.GetAsync(path), timeout);
+
+
+    public Task<BotInfo> GetBotInfoAsync(ulong botId)
+    {
+        return GetRequest<BotInfo>($"bot/{botId}");
+    }
+
+    public Task<BotInfo> GetBotInfoAsync(string shortId)
+    {
+        return GetRequest<BotInfo>($"bot/{shortId}");
+    }
+
+    public Task<IEnumerable<Comment>> GetBotCommentsAsync(ulong botId)
+    {
+        return GetRequest<IEnumerable<Comment>>($"bot/{botId}/comments");
+    }
+
+    public Task<IEnumerable<Comment>> GetBotCommentsAsync(string shortId)
+    {
+        return GetRequest<IEnumerable<Comment>>($"bot/{shortId}/comments");
+    }
+
+    public Task<OkResponse> SendBotStatsAsync(int servers, int shards = 1, int users = 0)
+    {
+        var content =
+            new StringContent(JsonConvert.SerializeObject(new {  servers, shards, users }));
+        return PostRequest<OkResponse>("stats", content);
+    }
 }
 

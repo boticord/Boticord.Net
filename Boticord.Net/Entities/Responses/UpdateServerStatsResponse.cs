@@ -2,7 +2,7 @@
 
 namespace Boticord.Net.Entities;
 
-public class UpdateServerResponse
+public class UpdateServerStatsResponse
 {
     [JsonProperty("serverID")]
     protected string _id { get; init; }

@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <Folder Include="Entities\ServerInfo\" />
+    <Folder Include="Services\" />
+    <Folder Include="Enums\" />
   </ItemGroup>
 
 </Project>
