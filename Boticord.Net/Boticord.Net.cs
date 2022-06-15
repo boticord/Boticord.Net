@@ -33,11 +33,15 @@ public class BoticordClient
 
     internal readonly TimeSpan BotsStatsRateLimit = TimeSpan.FromSeconds(2);
     
-    private TimeLimiter _mainLimiter = TimeLimiter.GetFromMaxCountByInterval(4, TimeSpan.FromSeconds(5));
+    private TimeLimiter _mainLimiter = TimeLimiter.GetFromMaxCountByInterval(5, TimeSpan.FromSeconds(6));
     private TimeLimiter _secondaryLimiter = TimeLimiter.GetFromMaxCountByInterval(1, TimeSpan.FromSeconds(3));
+
+    private bool _rateLimitTriggered = false;
 
     private async Task RateLimiter(bool postStats = false)
     {
+        if (_rateLimitTriggered)
+            await Task.Delay(6000);
         await _mainLimiter;
         if (postStats)
             await _secondaryLimiter;
@@ -62,6 +66,11 @@ public class BoticordClient
         }
         catch
         {
+            if (response.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                _rateLimitTriggered = true;
+                return await Request<T>(request);
+            }
             throw new HttpRequestException(await response.Content.ReadAsStringAsync(), null, response.StatusCode);
         }
     }
