@@ -15,10 +15,9 @@ namespace Boticord.Net;
 
 public class BoticordClient
 {
-    internal HttpClient HttpClient = new()
-    {
-        BaseAddress = new Uri("https://api.boticord.top/v2/")
-    };
+    internal HttpClient HttpClient;
+
+    internal const string BaseUrl = "https://api.boticord.top/v2/";
 
     internal readonly TimeSpan RateLimit = TimeSpan.FromSeconds(2);
     internal readonly TimeSpan BotsRateLimit = TimeSpan.FromSeconds(30);
@@ -30,7 +29,7 @@ public class BoticordClient
     {
         Config = config;
 
-        HttpClient = config.HttpClient ?? HttpClient;
+        HttpClient = config.HttpClient ?? new HttpClient();
 
         HttpClient.DefaultRequestHeaders.Add("Authorization", config.Token);
     }
@@ -48,6 +47,7 @@ public class BoticordClient
         await RateLimiter(timeout ?? RateLimit);
 
         request.Headers.Authorization = AuthenticationHeaderValue.Parse($"{Config.TokenType} {Config.Token}");
+
         var response = await HttpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
@@ -67,14 +67,14 @@ public class BoticordClient
 
     internal async Task<T> PostRequest<T>(string path, StringContent data, TimeSpan? timeout = null) =>
 
-        await Request<T>(new HttpRequestMessage(HttpMethod.Post, path){Content = data}, timeout);
+        await Request<T>(new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}{path}"){Content = data}, timeout);
 
     internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) =>
-        await Request<T>(new HttpRequestMessage(HttpMethod.Get, path), timeout);
+        await Request<T>(new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{path}"), timeout);
 
     internal async Task<bool> ValidateToken(string token, TokenType tokenType)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, "token");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{token}");
         request.Headers.Authorization = AuthenticationHeaderValue.Parse($"{tokenType} {token}");
 
         var response = await HttpClient.SendAsync(request);
