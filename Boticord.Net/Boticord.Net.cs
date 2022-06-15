@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
@@ -14,16 +15,12 @@ public class BoticordClient
 {
     internal HttpClient HttpClient = new()
     {
-        BaseAddress = new Uri("https://api.boticord.top/v2/"),
-        DefaultRequestHeaders =
-            {
-                Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
-            }
+        BaseAddress = new Uri("https://api.boticord.top/v2/")
     };
 
     internal readonly TimeSpan RateLimit = TimeSpan.FromSeconds(2);
     internal readonly TimeSpan BotsRateLimit = TimeSpan.FromSeconds(30);
-    private DateTime _lastRequest;
+    private DateTime _lastRequest = DateTime.UtcNow;
 
     public BoticordConfig Config;
 
@@ -38,7 +35,7 @@ public class BoticordClient
 
     private async Task RateLimiter(TimeSpan timeout)
     {
-        while (DateTime.UtcNow - _lastRequest <= timeout || _lastRequest != new DateTime())
+        while (DateTime.UtcNow - _lastRequest <= timeout)
             await Task.Delay(timeout - (DateTime.UtcNow - _lastRequest));
 
         _lastRequest = DateTime.UtcNow;
@@ -95,7 +92,7 @@ public class BoticordClient
     public Task<OkResponse> SendBotStatsAsync(int servers, int shards = 1, int users = 0)
     {
         var content =
-            new StringContent(JsonConvert.SerializeObject(new {  servers, shards, users }));
+            new StringContent(JsonConvert.SerializeObject(new {  servers, shards, users }), Encoding.UTF8, "application/json");
         return PostRequest<OkResponse>("stats", content);
     }
 }
