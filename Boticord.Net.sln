@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32519.111
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boticord.Net", "Boticord.Net\Boticord.Net.csproj", "{2A54F825-E6D5-495D-B422-AEBD3F051760}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boticord.Net", "Boticord.Net\Boticord.Net.csproj", "{2A54F825-E6D5-495D-B422-AEBD3F051760}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleBot", "SampleBot\SampleBot.csproj", "{D5B86409-AAB4-43A9-8534-D77DBDC5B0E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{6A8D7B29-CDF7-40DC-B499-CFF3BDF9661A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{2A54F825-E6D5-495D-B422-AEBD3F051760}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A54F825-E6D5-495D-B422-AEBD3F051760}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A54F825-E6D5-495D-B422-AEBD3F051760}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5B86409-AAB4-43A9-8534-D77DBDC5B0E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5B86409-AAB4-43A9-8534-D77DBDC5B0E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5B86409-AAB4-43A9-8534-D77DBDC5B0E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5B86409-AAB4-43A9-8534-D77DBDC5B0E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D5B86409-AAB4-43A9-8534-D77DBDC5B0E9} = {6A8D7B29-CDF7-40DC-B499-CFF3BDF9661A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F8FD4F0-7E29-4AA8-A7A8-C2C953C52D28}
