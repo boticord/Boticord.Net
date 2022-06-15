@@ -43,11 +43,12 @@ public class BoticordClient
         _lastRequest = DateTime.UtcNow;
     }
 
-    private async Task<T> Request<T>(Task<HttpResponseMessage> task, TimeSpan? timeout = null)
+    private async Task<T> Request<T>(HttpRequestMessage request, TimeSpan? timeout = null)
     {
         await RateLimiter(timeout ?? RateLimit);
 
-        var response = await task;
+        request.Headers.Authorization = AuthenticationHeaderValue.Parse($"{Config.TokenType} {Config.Token}");
+        var response = await HttpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
         if (response.IsSuccessStatusCode)
@@ -65,10 +66,21 @@ public class BoticordClient
     }
 
     internal async Task<T> PostRequest<T>(string path, StringContent data, TimeSpan? timeout = null) =>
-        await Request<T>(HttpClient.PostAsync(path, data), timeout);
+
+        await Request<T>(new HttpRequestMessage(HttpMethod.Post, path){Content = data}, timeout);
 
     internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) =>
-        await Request<T>(HttpClient.GetAsync(path), timeout);
+        await Request<T>(new HttpRequestMessage(HttpMethod.Get, path), timeout);
+
+    internal async Task<bool> ValidateToken(string token, TokenType tokenType)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "token");
+        request.Headers.Authorization = AuthenticationHeaderValue.Parse($"{tokenType} {token}");
+
+        var response = await HttpClient.SendAsync(request);
+
+        return response.IsSuccessStatusCode;
+    }
 
     private void ThrowIfNoAccess(Endpoints endpoint)
     {
