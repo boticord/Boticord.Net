@@ -1,4 +1,4 @@
-![Boticord Logo](https://media.discordapp.net/attachments/985686409039970345/986336905429913650/logo.png "image")
+![logo](https://user-images.githubusercontent.com/61027276/173885859-5710be33-b6f0-4008-80e3-b92b73024065.png)
 <div align="center ">
     <p>
         <a href="https://discord.gg/hkHjW8a"><img src="https://img.shields.io/discord/722424773233213460?color=7289da&label=Discord&logo=discord&logoColor=white" alt="Online"></a>
