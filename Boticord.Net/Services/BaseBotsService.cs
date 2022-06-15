@@ -25,11 +25,11 @@ public class BaseBotsService
     {
         timer = new(interval);
 
-        if (interval < _client.BotsRateLimit)
+        if (interval < _client.BotsStatsRateLimit)
             throw new ArgumentOutOfRangeException(
                 nameof(interval),
                 interval,
-                nameof(interval) + " value can not be less than " + _client.BotsRateLimit);
+                nameof(interval) + " value can not be less than " + _client.BotsStatsRateLimit);
 
         _ = Task.Run(async () =>
         {

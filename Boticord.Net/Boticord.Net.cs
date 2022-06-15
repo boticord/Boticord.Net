@@ -11,6 +11,9 @@ using Boticord.Net.Entities;
 using Boticord.Net.Utils;
 using Boticord.Net.Enums;
 
+using RateLimiter;
+using ComposableAsync;
+
 namespace Boticord.Net;
 
 public class BoticordClient
@@ -19,32 +22,34 @@ public class BoticordClient
 
     internal const string BaseUrl = "https://api.boticord.top/v2/";
 
-    internal readonly TimeSpan RateLimit = TimeSpan.FromSeconds(2);
-    internal readonly TimeSpan BotsRateLimit = TimeSpan.FromSeconds(30);
-    private DateTime _lastRequest = DateTime.UtcNow;
-
     public BoticordConfig Config;
 
     public BoticordClient(BoticordConfig config)
     {
         Config = config;
-
         HttpClient = config.HttpClient ?? new HttpClient();
-
         HttpClient.DefaultRequestHeaders.Add("Authorization", config.Token);
     }
 
-    private async Task RateLimiter(TimeSpan timeout)
-    {
-        while (DateTime.UtcNow - _lastRequest <= timeout)
-            await Task.Delay(timeout - (DateTime.UtcNow - _lastRequest));
+    internal readonly TimeSpan BotsStatsRateLimit = TimeSpan.FromSeconds(2);
+    
+    private TimeLimiter _mainLimiter = TimeLimiter.GetFromMaxCountByInterval(5, TimeSpan.FromSeconds(6));
+    private TimeLimiter _secondaryLimiter = TimeLimiter.GetFromMaxCountByInterval(1, TimeSpan.FromSeconds(3));
 
-        _lastRequest = DateTime.UtcNow;
+    private bool _rateLimitTriggered = false;
+
+    private async Task RateLimiter(bool postStats = false)
+    {
+        if (_rateLimitTriggered)
+            await Task.Delay(6000);
+        await _mainLimiter;
+        if (postStats)
+            await _secondaryLimiter;
     }
 
-    private async Task<T> Request<T>(HttpRequestMessage request, TimeSpan? timeout = null)
+    private async Task<T> Request<T>(HttpRequestMessage request)
     {
-        await RateLimiter(timeout ?? RateLimit);
+        await RateLimiter(request.RequestUri!.ToString().EndsWith("stats") || request.RequestUri!.ToString().EndsWith("server"));
 
         request.Headers.Authorization = AuthenticationHeaderValue.Parse(Config.Token);
 
@@ -61,16 +66,21 @@ public class BoticordClient
         }
         catch
         {
+            if (response.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                _rateLimitTriggered = true;
+                return await Request<T>(request);
+            }
             throw new HttpRequestException(await response.Content.ReadAsStringAsync(), null, response.StatusCode);
         }
     }
 
-    internal async Task<T> PostRequest<T>(string path, StringContent data, TimeSpan? timeout = null) =>
+    internal async Task<T> PostRequest<T>(string path, StringContent data) =>
 
-        await Request<T>(new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}{path}"){Content = data}, timeout);
+        await Request<T>(new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}{path}") { Content = data });
 
     internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) =>
-        await Request<T>(new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{path}"), timeout);
+        await Request<T>(new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{path}"));
 
     internal async Task<bool> ValidateToken(string token, TokenType tokenType)
     {
@@ -139,20 +149,20 @@ public class BoticordClient
         return GetRequest<IEnumerable<Comment>>($"server/{serverId}/comments");
     }
 
-    public Task<OkResponse> SendServerStatsAsync(ulong serverId, bool up, bool status, 
-        string? serverName = null, 
-        string? serverAvatar = null, 
-        uint? serverMembersAllCount = null, 
+    public Task<OkResponse> SendServerStatsAsync(ulong serverId, bool up, bool status,
+        string? serverName = null,
+        string? serverAvatar = null,
+        uint? serverMembersAllCount = null,
         uint? serverMembersOnlineCount = null,
         ulong? serverOwnerID = null)
     {
         ThrowIfNoAccess(Endpoints.PostServerStats);
-        
+
         var content =
             new StringContent(JsonConvert.SerializeObject(new
             {
-                serverId, 
-                up = up ? 1 : 0, 
+                serverId,
+                up = up ? 1 : 0,
                 status = status ? 1 : 0,
                 serverName,
                 serverAvatar,
