@@ -34,8 +34,7 @@ await Task.Delay(-1);
 async Task BotReady()
 {
     Console.WriteLine($"Logged into {botClient.CurrentUser}");
-
-    //run auto post things here
+    return Task.CompletedTask;
 }
 
 ```
