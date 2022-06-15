@@ -4,6 +4,19 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Boticord.Net</Title>
+    <Description>API Wrapper for Boticord API v2 written in C#
+Docs https://alxelzot.gitbook.io/boticord.net/</Description>
+    <PackageIcon>logo-full-v2.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/Boticord-Net/Boticord.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Boticord-Net/Boticord.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Boticord; BoticordApi; api wrapper</PackageTags>
+    <PackageReleaseNotes>First version of package</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +29,21 @@
     <Folder Include="Services\" />
     <Folder Include="Enums\" />
     <Folder Include="Utils\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="F:\Загрузки\logo-full-v2.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
