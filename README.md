@@ -2,6 +2,9 @@
 <div align="center ">
     <p>
         <a href="https://discord.gg/hkHjW8a"><img src="https://img.shields.io/discord/722424773233213460?color=7289da&label=Discord&logo=discord&logoColor=white" alt="Online"></a>
+          <a href="https://www.nuget.org/packages/Boticord.Net/">
+    <img src="https://img.shields.io/nuget/vpre/Boticord.Net.svg?maxAge=2592000?style=plastic" alt="NuGet">
+  </a>
     </p>
 </div>
 
