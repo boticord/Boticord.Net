@@ -9,6 +9,8 @@ using Boticord.Net.Utils;
 using Boticord.Net.Enums;
 
 using Boticord.Net.Services;
+using Newtonsoft.Json.Linq;
+
 namespace Boticord.Net;
 
 public class BoticordClient
@@ -19,11 +21,15 @@ public class BoticordClient
 
     public BoticordConfig Config;
 
+    
     public BoticordClient(BoticordConfig config)
     {
         Config = config;
         HttpClient = config.HttpClient ?? new HttpClient();
         HttpClient.DefaultRequestHeaders.Add("Authorization", config.Token);
+
+        if (!ValidateTokenAsync(Config.Token).GetAwaiter().GetResult())
+            throw new InvalidDataException("The supplied token was invalid");
     }
 
     internal readonly TimeSpan BotsStatsRateLimit = TimeSpan.FromSeconds(2);
@@ -70,22 +76,23 @@ public class BoticordClient
         }
     }
 
-    internal async Task<T> PostRequest<T>(string path, StringContent data) =>
+    internal async Task<T> PostRequest<T>(string path, StringContent data)
+        => await Request<T>(new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}{path}") { Content = data });
 
-        await Request<T>(new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}{path}") { Content = data });
+    internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) 
+        => await Request<T>(new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{path}"));
 
-    internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) =>
-        await Request<T>(new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{path}"));
-
-    internal async Task<bool> ValidateToken(string token, TokenType tokenType)
+    internal async Task<bool> ValidateTokenAsync(string constructedToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{token}");
-        request.Headers.Authorization = AuthenticationHeaderValue.Parse($"{tokenType} {token}");
-
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}token");
+        request.Headers.Authorization = AuthenticationHeaderValue.Parse(constructedToken);
         var response = await HttpClient.SendAsync(request);
 
         return response.IsSuccessStatusCode;
     }
+
+    public Task<bool> ValidateTokenAsync(string token, TokenType tokenType)
+        => ValidateTokenAsync($"{tokenType} {token}");
 
     private void ThrowIfNoAccess(Endpoints endpoint)
     {
