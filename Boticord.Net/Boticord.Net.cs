@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using Boticord.Net.Entities;
+using Boticord.Net.Utils;
+using Boticord.Net.Enums;
 
 namespace Boticord.Net;
 
@@ -27,7 +29,7 @@ public class BoticordClient
     public BoticordClient(BoticordConfig config)
     {
         Config = config;
-        
+
         HttpClient = config.HttpClient ?? HttpClient;
 
         HttpClient.DefaultRequestHeaders.Add("Authorization", config.Token);
@@ -48,7 +50,7 @@ public class BoticordClient
         var response = await task;
         response.EnsureSuccessStatusCode();
 
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
             return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync())!;
 
         try
@@ -68,31 +70,46 @@ public class BoticordClient
     internal async Task<T> GetRequest<T>(string path, TimeSpan? timeout = null) =>
         await Request<T>(HttpClient.GetAsync(path), timeout);
 
+    private void ThrowIfNoAccess(Endpoints endpoint)
+    {
+        if (!BoticordUtils.CanSendRequestToEndpoint(this, endpoint))
+            throw new InvalidOperationException($"Cannot access {endpoint} endpoint with token type {Config.TokenType}");
+    }
 
     public Task<BotInfo> GetBotInfoAsync(ulong botId)
     {
+        ThrowIfNoAccess(Endpoints.GetBotInfo);
+
         return GetRequest<BotInfo>($"bot/{botId}");
     }
 
     public Task<BotInfo> GetBotInfoAsync(string shortId)
     {
+        ThrowIfNoAccess(Endpoints.GetBotInfo);
+
         return GetRequest<BotInfo>($"bot/{shortId}");
     }
 
     public Task<IEnumerable<Comment>> GetBotCommentsAsync(ulong botId)
     {
+        ThrowIfNoAccess(Endpoints.GetBotComments);
+
         return GetRequest<IEnumerable<Comment>>($"bot/{botId}/comments");
     }
 
     public Task<IEnumerable<Comment>> GetBotCommentsAsync(string shortId)
     {
+        ThrowIfNoAccess(Endpoints.GetBotComments);
+        
         return GetRequest<IEnumerable<Comment>>($"bot/{shortId}/comments");
     }
 
     public Task<OkResponse> SendBotStatsAsync(uint servers, uint shards = 1, uint users = 0)
     {
+        ThrowIfNoAccess(Endpoints.PostBotStats);
+
         var content =
-            new StringContent(JsonConvert.SerializeObject(new {  servers, shards, users }), Encoding.UTF8, "application/json");
+            new StringContent(JsonConvert.SerializeObject(new { servers, shards, users }), Encoding.UTF8, "application/json");
         return PostRequest<OkResponse>("stats", content);
     }
 }
