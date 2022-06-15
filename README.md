@@ -8,6 +8,15 @@
     </p>
 </div>
 
+## Installation
+
+**Package Manager**
+
+> ```Install-Package Boticord.Net -Version 1.0.1```
+
+**.NET CLI**
+
+> ```dotnet add package Boticord.Net --version 1.0.1```
 
 ## Example usage
 This example uses [Discord.Net](https://github.com/discord-net/Discord.Net) to run discord bot
