@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using Discord.WebSocket;
+﻿using Discord.WebSocket;
 using Discord;
 using Boticord.Net;
 
