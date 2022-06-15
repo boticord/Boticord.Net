@@ -46,7 +46,7 @@ public class BoticordClient
     {
         await RateLimiter(timeout ?? RateLimit);
 
-        request.Headers.Authorization = AuthenticationHeaderValue.Parse($"{Config.TokenType} {Config.Token}");
+        request.Headers.Authorization = AuthenticationHeaderValue.Parse(Config.Token);
 
         var response = await HttpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
