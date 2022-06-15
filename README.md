@@ -6,7 +6,6 @@
     <a href="https://discord.gg/hkHjW8a"><img src="https://img.shields.io/discord/722424773233213460?color=7289da&label=Discord&logo=discord&logoColor=white" alt="Online"></a>
 </p>
 
-<br>Coming soon...</br>
 </div>
 
 
