@@ -20,6 +20,12 @@ Install-Package Boticord.Net -Version 1.0.1
 dotnet add package Boticord.Net --version 1.0.1
 ```
 
+## Useful Links
+
+* [GitHub]([https://pypi.org/project/boticordpy](https://github.com/boticord))
+* [Documentation]([https://pypi.org/project/boticordpy](https://alxelzot.gitbook.io/boticord.net/))
+* [BotiCord](https://boticord.top/)
+
 ## Example usage
 This example uses [Discord.Net](https://github.com/discord-net/Discord.Net) to run discord bot
 ```cs
