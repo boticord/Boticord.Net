@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class containing links from server's profile
+/// </summary>
 public class ServerLinks
 {
     [JsonProperty("invite")]

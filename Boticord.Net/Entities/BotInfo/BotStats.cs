@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class representing statistics of the bots
+/// </summary>
 public class BotStats
 {
     [JsonProperty("servers")]

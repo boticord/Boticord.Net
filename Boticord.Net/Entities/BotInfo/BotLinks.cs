@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class representing information about links in bot's profile
+/// </summary>
 public class BotLinks
 {
     [JsonProperty("discord")]

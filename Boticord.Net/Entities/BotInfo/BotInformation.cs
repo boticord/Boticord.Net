@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class representing detailed information about the bot
+/// </summary>
 public class BotInformation
 {
     [JsonProperty("developers")]

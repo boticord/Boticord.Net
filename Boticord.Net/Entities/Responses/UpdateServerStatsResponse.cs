@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// CLass containing info about server statistics update
+/// </summary>
 public class UpdateServerStatsResponse
 {
     [JsonProperty("serverID")]
