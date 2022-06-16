@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class containing all user comments in two categories
+/// </summary>
 public class UserComments
 {
     [JsonProperty("bots")]

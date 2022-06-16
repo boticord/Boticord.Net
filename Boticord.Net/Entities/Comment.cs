@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class representing a comment object
+/// </summary>
 public class Comment
 {
     [JsonProperty("userID")]

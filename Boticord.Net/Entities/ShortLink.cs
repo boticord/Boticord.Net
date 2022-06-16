@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class representing a shortened link object
+/// </summary>
 public class ShortLink
 {
     [JsonProperty("id")]

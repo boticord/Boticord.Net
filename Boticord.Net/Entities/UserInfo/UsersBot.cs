@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class representing information about user's bot
+/// </summary>
 public class UsersBot
 {
     [JsonProperty("id")]

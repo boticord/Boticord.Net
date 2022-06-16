@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class representing general information about the user
+/// </summary>
 public class UserInfo
 {
     [JsonProperty("id")]

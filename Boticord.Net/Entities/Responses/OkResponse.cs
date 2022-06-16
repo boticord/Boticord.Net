@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Ok
+/// </summary>
 public class OkResponse
 {
     [JsonProperty("ok")]

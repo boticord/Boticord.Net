@@ -2,6 +2,9 @@
 
 namespace Boticord.Net.Entities;
 
+/// <summary>
+/// Class containing detailed information about a server
+/// </summary>
 public class ServerInformation
 {
     [JsonProperty("name")]
