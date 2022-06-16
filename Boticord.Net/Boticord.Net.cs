@@ -9,16 +9,22 @@ using Boticord.Net.Utils;
 using Boticord.Net.Enums;
 
 using Boticord.Net.Services;
-using Newtonsoft.Json.Linq;
 
 namespace Boticord.Net;
 
+
+/// <summary>
+/// Boticord API Rest client
+/// </summary>
 public class BoticordClient
 {
     internal HttpClient HttpClient;
 
     internal const string BaseUrl = "https://api.boticord.top/v2/";
 
+    /// <summary>
+    /// The config client uses
+    /// </summary>
     public BoticordConfig Config;
     
     /// <summary>
