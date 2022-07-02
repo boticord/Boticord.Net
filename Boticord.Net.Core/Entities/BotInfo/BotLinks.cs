@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Boticord.Net.Entities;
+﻿namespace Boticord.Net.Core;
 
 /// <summary>
 /// Class representing information about links in bot's profile

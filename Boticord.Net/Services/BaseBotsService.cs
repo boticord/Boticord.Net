@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Boticord.Net;
-using Boticord.Net.Entities;
 
 namespace Boticord.Net.Services;
 

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Boticord.Net.Entities;
+﻿namespace Boticord.Net.Core;
 
 /// <summary>
 /// CLass containing info about server statistics update

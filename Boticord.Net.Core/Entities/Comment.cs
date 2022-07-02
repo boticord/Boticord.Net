@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-using Newtonsoft.Json;
-
-namespace Boticord.Net.Entities;
+﻿namespace Boticord.Net.Core;
 
 /// <summary>
 /// Class representing a comment object

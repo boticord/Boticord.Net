@@ -4,11 +4,12 @@ using System.Text;
 
 using Newtonsoft.Json;
 
-using Boticord.Net.Entities;
 using Boticord.Net.Utils;
 using Boticord.Net.Enums;
 
 using Boticord.Net.Services;
+using Boticord.Net.Core;
+
 
 namespace Boticord.Net;
 

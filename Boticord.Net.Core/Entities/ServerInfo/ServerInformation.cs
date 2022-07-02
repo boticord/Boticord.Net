@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Boticord.Net.Entities;
+﻿namespace Boticord.Net.Core;
 
 /// <summary>
 /// Class containing detailed information about a server
