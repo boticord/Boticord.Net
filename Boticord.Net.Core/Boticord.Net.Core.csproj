@@ -10,6 +10,11 @@
     <Description>Core package containing models for Boticord API</Description>
     <PackageProjectUrl>https://github.com/boticord/Boticord.Net</PackageProjectUrl>
     <PackageIcon>logo-full-v2.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/boticord/Boticord.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Boticord; BoticordAPI</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,14 +22,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE.txt" Link="LICENSE.txt">
-      <PackagePath>\</PackagePath>
+    <None Update="LICENSE.txt">
       <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="logo-full-v2.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="LICIENSE.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
