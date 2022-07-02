@@ -13,11 +13,11 @@
 **Package Manager**
 
 ```
-Install-Package Boticord.Net -Version 1.0.3
+Install-Package Boticord.Net -Version 1.1.0
 ```
 
 ```
-dotnet add package Boticord.Net --version 1.0.3
+dotnet add package Boticord.Net --version 1.1.0
 ```
 * [Nuget](https://www.nuget.org/packages/Boticord.Net/)
 

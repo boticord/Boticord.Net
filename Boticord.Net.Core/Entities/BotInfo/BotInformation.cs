@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using Newtonsoft.Json;
-
-namespace Boticord.Net.Entities;
+﻿namespace Boticord.Net.Core;
 
 /// <summary>
 /// Class representing detailed information about the bot

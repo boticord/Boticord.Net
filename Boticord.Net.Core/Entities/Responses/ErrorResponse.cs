@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace Boticord.Net.Entities;
+﻿namespace Boticord.Net.Core;
 
 /// <summary>
 /// Class containing an error returned from the API
